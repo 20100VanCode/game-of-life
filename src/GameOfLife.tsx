@@ -254,14 +254,14 @@ const GameOfLife = () => {
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
     
-        // Simplified metrics for mobile to save space
+        // Simplified metrics for mobile to save space but still readable
         const metrics = isMobile 
           ? [
-              { label: 'G', value: this.metrics.generation },
-              { label: 'P', value: this.metrics.population },
-              { label: 'B', value: this.metrics.births },
-              { label: 'D', value: this.metrics.deaths },
-              { label: 'DE', value: `${(this.metrics.density * 100).toFixed(1)}%` }
+              { label: 'GEN', value: this.metrics.generation },
+              { label: 'POP', value: this.metrics.population },
+              { label: 'BORN', value: this.metrics.births },
+              { label: 'DIED', value: this.metrics.deaths },
+              { label: 'DENS', value: `${(this.metrics.density * 100).toFixed(1)}%` }
             ]
           : [
               { label: 'GEN', value: this.metrics.generation },
