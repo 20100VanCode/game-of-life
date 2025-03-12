@@ -195,10 +195,11 @@ const GameOfLife = () => {
         this.ctx.save();
         
         // Calculate card dimensions and position
-        const padding = 15;
-        const cardHeight = 30;
-        const cardY = 15;
-        const cardWidth = Math.min(this.w - (padding * 2), 800);
+        const isMobile = window.innerWidth < 768; // Check if device is mobile
+        const padding = isMobile ? 8 : 15;
+        const cardHeight = isMobile ? 20 : 30;
+        const cardY = 10;
+        const cardWidth = Math.min(this.w - (padding * 2), isMobile ? 300 : 800);
         const cardX = (this.w - cardWidth) / 2;
     
         // Animate glow effect
@@ -219,12 +220,12 @@ const GameOfLife = () => {
         
         // Animated glow effect
         this.ctx.shadowColor = `rgba(0, 150, 255, ${glowIntensity})`;
-        this.ctx.shadowBlur = 15 + Math.sin(time * 3) * 5;
+        this.ctx.shadowBlur = isMobile ? 8 : (15 + Math.sin(time * 3) * 5);
         this.ctx.shadowOffsetX = 0;
         this.ctx.shadowOffsetY = 2;
         
         this.ctx.beginPath();
-        this.ctx.roundRect(cardX, cardY, cardWidth, cardHeight, 8);
+        this.ctx.roundRect(cardX, cardY, cardWidth, cardHeight, isMobile ? 4 : 8);
         this.ctx.fill();
     
         // Animated border glow with gradient
@@ -239,26 +240,36 @@ const GameOfLife = () => {
         borderGradient.addColorStop(1, `hsla(${baseHue}, 80%, 70%, ${borderGlow})`);
     
         this.ctx.strokeStyle = borderGradient;
-        this.ctx.lineWidth = 1;
+        this.ctx.lineWidth = isMobile ? 0.5 : 1;
         this.ctx.stroke();
     
         // Reset shadow for text
         this.ctx.shadowColor = `rgba(0, 150, 255, ${glowIntensity * 1.5})`;
-        this.ctx.shadowBlur = 3;
+        this.ctx.shadowBlur = isMobile ? 2 : 3;
         this.ctx.shadowOffsetX = 0;
         this.ctx.shadowOffsetY = 0;
     
-        this.ctx.font = '600 12px system-ui';
+        // Adjust font size for mobile
+        this.ctx.font = isMobile ? '600 9px system-ui' : '600 12px system-ui';
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
     
-        const metrics = [
-          { label: 'GEN', value: this.metrics.generation },
-          { label: 'POP', value: this.metrics.population },
-          { label: 'BIRTHS', value: this.metrics.births },
-          { label: 'DEATHS', value: this.metrics.deaths },
-          { label: 'DENSITY', value: `${(this.metrics.density * 100).toFixed(1)}%` }
-        ];
+        // Simplified metrics for mobile to save space
+        const metrics = isMobile 
+          ? [
+              { label: 'G', value: this.metrics.generation },
+              { label: 'P', value: this.metrics.population },
+              { label: 'B', value: this.metrics.births },
+              { label: 'D', value: this.metrics.deaths },
+              { label: 'DE', value: `${(this.metrics.density * 100).toFixed(1)}%` }
+            ]
+          : [
+              { label: 'GEN', value: this.metrics.generation },
+              { label: 'POP', value: this.metrics.population },
+              { label: 'BIRTHS', value: this.metrics.births },
+              { label: 'DEATHS', value: this.metrics.deaths },
+              { label: 'DENSITY', value: `${(this.metrics.density * 100).toFixed(1)}%` }
+            ];
     
         const metricWidth = cardWidth / metrics.length;
         const textY = cardY + (cardHeight / 2);
